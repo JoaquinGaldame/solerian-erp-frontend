@@ -53,7 +53,7 @@ import { NavigationItem } from '../models/navigation-item.model';
                   Plataforma operativa
                 </p>
                 <p class="text-app-strong mt-2 text-lg font-semibold">
-                  Gestion centralizada para operaciones, finanzas e inventario
+                  Gestion centralizada y automatizada de los procesos operativos y administrativos.
                 </p>
               </div>
 

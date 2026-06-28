@@ -1,0 +1,113 @@
+<div class="space-y-6">
+  <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div class="space-y-2">
+      <p class="text-app-soft text-xs font-semibold uppercase tracking-[0.3em]">Productos</p>
+      <div>
+        <h1 class="text-app-strong text-3xl font-semibold">Catalogo de productos</h1>
+        <p class="text-app-soft mt-2 max-w-3xl text-sm leading-6">
+          Maestro mock preparado con listado conectado al store y flujo modal reutilizable para
+          alta y edicion de productos.
+        </p>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="btn-primary inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold shadow-lg transition hover:-translate-y-0.5"
+      (click)="openCreateModal()"
+    >
+      <span>Alta Producto</span>
+    </button>
+  </header>
+
+  @if (error$ | async; as error) {
+    @if (error) {
+      <div class="alert-danger rounded-2xl px-4 py-3 text-sm">
+        {{ error }}
+      </div>
+    }
+  }
+
+  <section class="panel overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="table-shell min-w-full divide-y">
+        <thead class="table-head">
+          <tr>
+            <th class="products-table__heading">SKU</th>
+            <th class="products-table__heading">Producto</th>
+            <th class="products-table__heading">Categoria</th>
+            <th class="products-table__heading">Stock</th>
+            <th class="products-table__heading">Precio</th>
+            <th class="products-table__heading">Estado</th>
+            <th class="products-table__heading">Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody class="table-shell divide-y">
+          @if (loading$ | async) {
+            <tr class="table-row">
+              <td colspan="7" class="products-table__empty">Cargando productos...</td>
+            </tr>
+          } @else {
+            @if (products$ | async; as products) {
+              @for (product of products; track product.id) {
+                <tr class="table-row">
+                  <td class="products-table__cell">{{ product.sku }}</td>
+                  <td class="products-table__cell">
+                    <div class="space-y-1">
+                      <p class="text-app-strong font-semibold">{{ product.name }}</p>
+                      <p class="text-app-soft text-xs">{{ product.description }}</p>
+                    </div>
+                  </td>
+                  <td class="products-table__cell">{{ product.category }}</td>
+                  <td class="products-table__cell">{{ product.stock }}</td>
+                  <td class="products-table__cell">{{ product.price | currency: 'USD' : 'symbol' : '1.0-0' }}</td>
+                  <td class="products-table__cell">
+                    <span class="products-table__status" [ngClass]="'products-table__status--' + product.status">
+                      {{ product.status }}
+                    </span>
+                  </td>
+                  <td class="products-table__cell">
+                    <div class="products-table__actions">
+                      <button
+                        type="button"
+                        class="products-table__icon-button"
+                        aria-label="Editar producto"
+                        (click)="openEditModal(product)"
+                      >
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path
+                            d="M4 20h4l10-10-4-4L4 16v4zm11-13 2 2"
+                          />
+                        </svg>
+                      </button>
+
+                      <button
+                        type="button"
+                        class="products-table__icon-button"
+                        aria-label="Eliminar producto"
+                        (click)="requestDelete(product)"
+                      >
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path
+                            d="M6 7h12M9 7V5h6v2m-8 0 1 12h8l1-12M10 11v5m4-5v5"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              } @empty {
+                <tr class="table-row">
+                  <td colspan="7" class="products-table__empty">No hay productos disponibles en el catalogo mock.</td>
+                </tr>
+              }
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <app-product-form-modal />
+</div>
