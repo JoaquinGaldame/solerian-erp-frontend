@@ -17,6 +17,7 @@ import { Store } from '@ngrx/store';
 import { routes } from './app.routes';
 import { authTokenInterceptor } from './core/http/interceptors/auth-token.interceptor';
 import { AuthActions } from './core/auth/store/auth.actions';
+import { ThemeService } from './core/theme/theme.service';
 import { appEffects } from './store/app.effects';
 import { appReducers } from './store/app.reducers';
 
@@ -34,6 +35,7 @@ export const appConfig: ApplicationConfig = {
       provide: ENVIRONMENT_INITIALIZER,
       multi: true,
       useValue: () => {
+        inject(ThemeService).restoreTheme();
         inject(Store).dispatch(AuthActions.restoreSession());
       }
     }

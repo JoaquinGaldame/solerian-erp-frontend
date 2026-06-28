@@ -9,16 +9,16 @@ import { RouterLink } from '@angular/router';
   template: `
     <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div class="space-y-2">
-        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">{{ eyebrow() }}</p>
+        <p class="text-app-soft text-xs font-semibold uppercase tracking-[0.3em]">{{ eyebrow() }}</p>
         <div>
-          <h1 class="text-3xl font-semibold text-slate-950">{{ title() }}</h1>
-          <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-600">{{ subtitle() }}</p>
+          <h1 class="text-app-strong text-3xl font-semibold">{{ title() }}</h1>
+          <p class="text-app-soft mt-2 max-w-3xl text-sm leading-6">{{ subtitle() }}</p>
         </div>
       </div>
       @if (actionLabel() && actionRoute()) {
         <a
           [routerLink]="actionRoute()"
-          class="btn-primary inline-flex items-center justify-center rounded-2xl px-4 py-3 text-sm font-semibold shadow-lg shadow-sky-900/20 transition hover:-translate-y-0.5"
+          class="btn-primary inline-flex items-center justify-center rounded-2xl px-4 py-3 text-sm font-semibold shadow-lg transition hover:-translate-y-0.5"
         >
           {{ actionLabel() }}
         </a>

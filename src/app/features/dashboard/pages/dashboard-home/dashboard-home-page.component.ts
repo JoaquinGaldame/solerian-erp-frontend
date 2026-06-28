@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+
 import { PageHeaderComponent } from '../../../../shared/ui/page-header/page-header.component';
 import { SummaryCardComponent } from '../../../../shared/ui/summary-card/summary-card.component';
 
@@ -13,7 +14,7 @@ import { SummaryCardComponent } from '../../../../shared/ui/summary-card/summary
       <app-page-header
         eyebrow="Overview"
         title="Dashboard ejecutivo"
-        subtitle="Panel inicial con indicadores mock para validar navegación, layouts y shell operativa del ERP."
+        subtitle="Panel inicial con indicadores mock para validar navegacion, layouts y shell operativa del ERP."
       />
 
       <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -29,16 +30,16 @@ import { SummaryCardComponent } from '../../../../shared/ui/summary-card/summary
 
       <section class="grid gap-6 xl:grid-cols-[1.4fr_0.9fr]">
         <article class="panel p-6">
-          <h3 class="text-xl font-semibold text-slate-950">Actividad reciente</h3>
+          <h3 class="text-app-strong text-xl font-semibold">Actividad reciente</h3>
           <div class="mt-5 grid gap-4">
             @for (item of recentActivity; track item.title) {
-              <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
+              <div class="surface-soft rounded-2xl px-4 py-4">
                 <div class="flex items-start justify-between gap-4">
                   <div>
-                    <p class="font-semibold text-slate-900">{{ item.title }}</p>
-                    <p class="mt-1 text-sm text-slate-600">{{ item.description }}</p>
+                    <p class="text-app-strong font-semibold">{{ item.title }}</p>
+                    <p class="text-app-soft mt-1 text-sm">{{ item.description }}</p>
                   </div>
-                  <span class="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-500">
+                  <span class="theme-toggle rounded-full px-3 py-1 text-xs font-semibold shadow-none">
                     {{ item.when }}
                   </span>
                 </div>
@@ -48,15 +49,15 @@ import { SummaryCardComponent } from '../../../../shared/ui/summary-card/summary
         </article>
 
         <article class="panel p-6">
-          <h3 class="text-xl font-semibold text-slate-950">Accesos rápidos</h3>
+          <h3 class="text-app-strong text-xl font-semibold">Accesos rapidos</h3>
           <div class="mt-5 grid gap-3">
             @for (item of shortcuts; track item.title) {
               <a
                 [routerLink]="item.href"
-                class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm transition hover:border-sky-300 hover:bg-sky-50"
+                class="surface-soft rounded-2xl px-4 py-4 text-sm transition hover:-translate-y-0.5"
               >
-                <p class="font-semibold text-slate-900">{{ item.title }}</p>
-                <p class="mt-1 text-slate-600">{{ item.description }}</p>
+                <p class="text-app-strong font-semibold">{{ item.title }}</p>
+                <p class="text-app-soft mt-1">{{ item.description }}</p>
               </a>
             }
           </div>
@@ -76,9 +77,9 @@ export class DashboardHomePageComponent {
   ];
 
   protected readonly recentActivity = [
-    { title: 'Orden de compra aprobada', description: 'Se aprobó OC-2026-017 para abastecimiento general.', when: 'Hace 18 min' },
+    { title: 'Orden de compra aprobada', description: 'Se aprobo OC-2026-017 para abastecimiento general.', when: 'Hace 18 min' },
     { title: 'Nuevo cliente registrado', description: 'Distribuidora Andina fue agregada al maestro comercial.', when: 'Hace 42 min' },
-    { title: 'Alerta de stock', description: 'El SKU PRD-104 quedó por debajo del umbral mínimo.', when: 'Hace 1 h' }
+    { title: 'Alerta de stock', description: 'El SKU PRD-104 quedo por debajo del umbral minimo.', when: 'Hace 1 h' }
   ];
 
   protected readonly shortcuts = [

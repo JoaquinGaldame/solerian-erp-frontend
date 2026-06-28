@@ -5,9 +5,9 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="flex items-center gap-3 text-sm text-slate-600">
+    <div class="text-app-soft flex items-center gap-3 text-sm">
       <div
-        class="h-5 w-5 animate-spin rounded-full border-2 border-slate-200 border-t-slate-700"
+        class="border-app h-5 w-5 animate-spin rounded-full border-2 border-t-[var(--color-primary)]"
       ></div>
       <span>{{ label() }}</span>
     </div>

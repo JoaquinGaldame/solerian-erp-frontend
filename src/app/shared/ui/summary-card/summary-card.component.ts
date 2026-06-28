@@ -8,14 +8,14 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
     <article class="panel flex flex-col gap-3 p-5">
       <div class="flex items-start justify-between">
         <div>
-          <p class="text-sm font-medium text-slate-500">{{ label() }}</p>
-          <h3 class="mt-2 text-3xl font-semibold text-slate-950">{{ value() }}</h3>
+          <p class="text-app-soft text-sm font-medium">{{ label() }}</p>
+          <h3 class="text-app-strong mt-2 text-3xl font-semibold">{{ value() }}</h3>
         </div>
-        <span class="rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-800">
+        <span class="badge-info rounded-full px-3 py-1 text-xs font-semibold">
           {{ trend() }}
         </span>
       </div>
-      <p class="text-sm text-slate-600">{{ description() }}</p>
+      <p class="text-app-soft text-sm">{{ description() }}</p>
     </article>
   `
 })

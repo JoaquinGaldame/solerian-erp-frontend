@@ -2,11 +2,13 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { APP_NAME } from '../../config/app.constants';
-import { NavigationItem } from '../models/navigation-item.model';
+
+import { AppState } from '../../../store/app.state';
 import { AuthActions } from '../../auth/store/auth.actions';
 import { selectCurrentUser } from '../../auth/store/auth.selectors';
-import { AppState } from '../../../store/app.state';
+import { APP_NAME } from '../../config/app.constants';
+import { ThemeService } from '../../theme/theme.service';
+import { NavigationItem } from '../models/navigation-item.model';
 
 @Component({
   selector: 'app-private-layout',
@@ -14,29 +16,27 @@ import { AppState } from '../../../store/app.state';
   imports: [AsyncPipe, RouterLink, RouterLinkActive, RouterOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-dvh w-full bg-transparent">
+    <div class="app-shell min-h-dvh w-full">
       <div class="flex min-h-dvh w-full flex-col lg:flex-row">
-        <aside class="border-b border-slate-200 bg-slate-950 text-white lg:flex lg:min-h-dvh lg:w-72 lg:flex-col lg:border-b-0 lg:border-r lg:border-slate-800">
+        <aside class="app-sidebar border-b lg:flex lg:min-h-dvh lg:w-72 lg:flex-col lg:border-b-0 lg:border-r">
           <div class="flex items-center justify-between px-6 py-6">
             <div>
-              <p class="text-xs uppercase tracking-[0.3em] text-slate-400">ERP</p>
+              <p class="app-sidebar-label text-xs uppercase tracking-[0.3em]">ERP</p>
               <h2 class="mt-2 text-2xl font-semibold">{{ appName }}</h2>
             </div>
-            <span class="rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-semibold text-emerald-300">
-              Beta
-            </span>
+            <span class="app-badge rounded-full px-3 py-1 text-xs font-semibold">Beta</span>
           </div>
 
           <nav class="grid gap-1 px-3 pb-6 lg:flex-1 lg:content-start">
             @for (item of navigation; track item.route) {
               <a
                 [routerLink]="item.route"
-                routerLinkActive="bg-white text-slate-950 shadow-lg shadow-slate-950/25"
-                class="flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-white/8 hover:text-white"
+                routerLinkActive="app-nav-link-active"
+                class="app-nav-link flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-medium transition"
               >
                 <span>{{ item.label }}</span>
                 @if (item.badge) {
-                  <span class="rounded-full bg-sky-500/20 px-2 py-1 text-[11px] font-semibold text-sky-200">
+                  <span class="app-badge rounded-full px-2 py-1 text-[11px] font-semibold">
                     {{ item.badge }}
                   </span>
                 }
@@ -46,33 +46,54 @@ import { AppState } from '../../../store/app.state';
         </aside>
 
         <div class="flex min-h-dvh min-w-0 flex-1 flex-col">
-          <header class="border-b border-slate-200 bg-white/90 backdrop-blur">
+          <header class="app-header border-b backdrop-blur">
             <div class="flex flex-col gap-4 px-6 py-4 md:flex-row md:items-center md:justify-between">
               <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+                <p class="text-app-soft text-xs font-semibold uppercase tracking-[0.3em]">
                   Plataforma operativa
                 </p>
-                <p class="mt-2 text-lg font-semibold text-slate-950">
+                <p class="text-app-strong mt-2 text-lg font-semibold">
                   Gestion centralizada para operaciones, finanzas e inventario
                 </p>
               </div>
 
-              <div class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <div>
-                  <p class="text-sm font-semibold text-slate-900">
-                    {{ (currentUser$ | async)?.name || 'Usuario autenticado' }}
-                  </p>
-                  <p class="text-xs uppercase tracking-[0.2em] text-slate-500">
-                    {{ (currentUser$ | async)?.role || 'Sesion mock' }}
-                  </p>
+              <div class="flex flex-wrap items-center gap-3">
+                <div class="theme-toggle inline-flex rounded-2xl p-1">
+                  <button
+                    type="button"
+                    (click)="setTheme('light')"
+                    [class.theme-toggle-option-active]="themeService.currentTheme() === 'light'"
+                    class="theme-toggle-option rounded-xl px-3 py-2 text-sm font-semibold transition"
+                  >
+                    Light
+                  </button>
+                  <button
+                    type="button"
+                    (click)="setTheme('dark')"
+                    [class.theme-toggle-option-active]="themeService.currentTheme() === 'dark'"
+                    class="theme-toggle-option rounded-xl px-3 py-2 text-sm font-semibold transition"
+                  >
+                    Dark
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  (click)="logout()"
-                  class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-100"
-                >
-                  Logout
-                </button>
+
+                <div class="app-toolbar flex items-center gap-3 rounded-2xl px-4 py-3">
+                  <div>
+                    <p class="text-app-strong text-sm font-semibold">
+                      {{ (currentUser$ | async)?.name || 'Usuario autenticado' }}
+                    </p>
+                    <p class="text-app-soft text-xs uppercase tracking-[0.2em]">
+                      {{ (currentUser$ | async)?.role || 'Sesion mock' }}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    (click)="logout()"
+                    class="btn-secondary rounded-xl px-3 py-2 text-sm font-semibold transition hover:opacity-90"
+                  >
+                    Logout
+                  </button>
+                </div>
               </div>
             </div>
           </header>
@@ -90,6 +111,7 @@ export class PrivateLayoutComponent {
 
   protected readonly appName = APP_NAME;
   protected readonly currentUser$ = this.store.select(selectCurrentUser);
+  protected readonly themeService = inject(ThemeService);
   protected readonly navigation: NavigationItem[] = [
     { label: 'Dashboard', route: '/app/dashboard' },
     { label: 'Clientes', route: '/app/customers' },
@@ -104,5 +126,9 @@ export class PrivateLayoutComponent {
 
   protected logout(): void {
     this.store.dispatch(AuthActions.logout());
+  }
+
+  protected setTheme(theme: 'light' | 'dark'): void {
+    this.themeService.setTheme(theme);
   }
 }

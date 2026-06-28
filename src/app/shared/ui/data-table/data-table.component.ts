@@ -14,21 +14,21 @@ export type DataTableRow = Record<string, string | number>;
   template: `
     <div class="panel overflow-hidden">
       <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-slate-200">
-          <thead class="bg-slate-50">
+        <table class="table-shell min-w-full divide-y">
+          <thead class="table-head">
             <tr>
               @for (column of columns(); track column.key) {
-                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                <th class="text-app-soft px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.2em]">
                   {{ column.label }}
                 </th>
               }
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100 bg-white">
+          <tbody class="table-shell divide-y">
             @for (row of rows(); track $index) {
-              <tr class="hover:bg-slate-50/80">
+              <tr class="table-row">
                 @for (column of columns(); track column.key) {
-                  <td class="px-4 py-4 text-sm text-slate-700">{{ row[column.key] }}</td>
+                  <td class="text-app px-4 py-4 text-sm">{{ row[column.key] }}</td>
                 }
               </tr>
             }
