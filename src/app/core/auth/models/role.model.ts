@@ -1,0 +1,1 @@
+export type Role = 'ADMIN' | 'SALES_MANAGER' | 'INVENTORY_MANAGER' | 'FINANCE_ANALYST';
