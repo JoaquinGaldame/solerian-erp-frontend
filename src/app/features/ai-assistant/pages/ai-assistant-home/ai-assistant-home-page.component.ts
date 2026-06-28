@@ -15,7 +15,7 @@ import { PageHeaderComponent } from '../../../../shared/ui/page-header/page-head
         title="Asistente inteligente del ERP"
         subtitle="Seccion reservada para futuras capacidades asistidas por IA, sin integracion real en esta fase."
       />
-      <section class="surface-tint rounded-[1.5rem] p-6 shadow-[var(--shadow-soft)]">
+      <section class="surface-tint rounded-3xl p-6 shadow-(--shadow-soft)">
         <p class="text-app text-sm font-semibold uppercase tracking-[0.3em]">Futuro feature</p>
         <h2 class="text-app-strong mt-3 text-2xl font-semibold">Todavia no se integra ningun modelo IA</h2>
         <p class="text-app-soft mt-3 max-w-3xl text-sm leading-7">

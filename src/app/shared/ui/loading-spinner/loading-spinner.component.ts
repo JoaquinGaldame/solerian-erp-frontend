@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   template: `
     <div class="text-app-soft flex items-center gap-3 text-sm">
       <div
-        class="border-app h-5 w-5 animate-spin rounded-full border-2 border-t-[var(--color-primary)]"
+        class="border-app h-5 w-5 animate-spin rounded-full border-2 border-t-(--color-primary)"
       ></div>
       <span>{{ label() }}</span>
     </div>
