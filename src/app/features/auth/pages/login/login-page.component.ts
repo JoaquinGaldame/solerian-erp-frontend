@@ -1,6 +1,11 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { Store } from '@ngrx/store';
 
 import { AuthActions } from '../../../../core/auth/store/auth.actions';
@@ -13,7 +18,16 @@ import { LoadingSpinnerComponent } from '../../../../shared/ui/loading-spinner/l
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [AsyncPipe, ReactiveFormsModule, LoadingSpinnerComponent],
+  imports: [
+    AsyncPipe,
+    LoadingSpinnerComponent,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    ReactiveFormsModule
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="login-form-shell">
@@ -22,7 +36,9 @@ import { LoadingSpinnerComponent } from '../../../../shared/ui/loading-spinner/l
           <div class="space-y-3">
             <p class="text-app-strong text-lg font-semibold tracking-[0.28em]">SOLERIAN</p>
             <div class="space-y-1">
-              <p class="text-app-soft text-sm font-medium uppercase tracking-[0.32em]">ERP Platform</p>
+              <p class="text-app-soft text-sm font-medium uppercase tracking-[0.32em]">
+                ERP Platform
+              </p>
               <h2 class="text-app-strong text-4xl font-semibold tracking-tight">Welcome back</h2>
             </div>
             <p class="text-app-soft max-w-md text-sm leading-7">
@@ -32,77 +48,80 @@ import { LoadingSpinnerComponent } from '../../../../shared/ui/loading-spinner/l
 
           <div class="grid grid-cols-3 gap-3">
             <div class="surface-soft login-mini-card rounded-2xl px-4 py-3">
-              <p class="text-app-soft text-[11px] font-semibold uppercase tracking-[0.24em]">Secure</p>
+              <p class="text-app-soft text-[11px] font-semibold uppercase tracking-[0.24em]">
+                Secure
+              </p>
               <p class="text-app-strong mt-2 text-sm font-semibold">NgRx Session</p>
             </div>
             <div class="surface-soft login-mini-card rounded-2xl px-4 py-3">
-              <p class="text-app-soft text-[11px] font-semibold uppercase tracking-[0.24em]">Modules</p>
+              <p class="text-app-soft text-[11px] font-semibold uppercase tracking-[0.24em]">
+                Modules
+              </p>
               <p class="text-app-strong mt-2 text-sm font-semibold">Unified ERP</p>
             </div>
             <div class="surface-soft login-mini-card rounded-2xl px-4 py-3">
-              <p class="text-app-soft text-[11px] font-semibold uppercase tracking-[0.24em]">Future</p>
+              <p class="text-app-soft text-[11px] font-semibold uppercase tracking-[0.24em]">
+                Future
+              </p>
               <p class="text-app-strong mt-2 text-sm font-semibold">AI Ready</p>
             </div>
           </div>
         </div>
 
-        <form [formGroup]="form" (ngSubmit)="submit()" class="login-section login-section-form space-y-5">
-          <label class="block space-y-2">
-            <span class="text-app text-sm font-medium">Email</span>
+        <form [formGroup]="form" (ngSubmit)="submit()" class="login-section login-section-form space-y-4">
+          <mat-form-field appearance="fill" class="erp-form-field login-field">
+            <mat-label>Email</mat-label>
             <input
+              matInput
               type="email"
               formControlName="email"
-              class="login-input input-shell w-full rounded-2xl px-4 py-3.5 outline-none"
               placeholder="admin@solerian.local"
               autocomplete="email"
             />
-          </label>
+            <mat-icon matSuffix fontSet="material-symbols-outlined">person</mat-icon>
+          </mat-form-field>
 
           @if (emailControl.invalid && emailControl.touched) {
             <p class="login-feedback text-sm text-(--color-danger)">Enter a valid email address.</p>
           }
 
-          <label class="block space-y-2">
-            <span class="text-app text-sm font-medium">Password</span>
-            <div class="login-input-shell input-shell flex items-center rounded-2xl pr-2 transition">
-              <input
-                [type]="passwordInputType()"
-                formControlName="password"
-                class="login-input w-full rounded-2xl bg-transparent px-4 py-3.5 outline-none"
-                placeholder="Enter your password"
-                autocomplete="current-password"
-              />
-              <button
-                type="button"
-                (click)="togglePasswordVisibility()"
-                class="password-toggle text-app-soft rounded-xl px-3 py-2 text-sm font-medium"
-                [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
-              >
-                {{ showPassword() ? 'Hide' : 'Show' }}
-              </button>
-            </div>
-          </label>
+          <mat-form-field appearance="fill" class="erp-form-field login-field">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              [type]="passwordInputType()"
+              formControlName="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              class="password-toggle"
+              [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+              (click)="togglePasswordVisibility()"
+            >
+              <mat-icon fontSet="material-symbols-outlined">
+                {{ showPassword() ? 'visibility_off' : 'visibility' }}
+              </mat-icon>
+            </button>
+          </mat-form-field>
 
           @if (passwordControl.invalid && passwordControl.touched) {
             <p class="login-feedback text-sm text-(--color-danger)">Password is required.</p>
           }
 
           <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <label class="remember-option text-app-soft inline-flex items-center gap-3 text-sm">
-              <input
-                type="checkbox"
-                class="remember-checkbox h-4 w-4 rounded border border-(--color-border) bg-(--color-surface) text-(--color-primary)"
-              />
-              <span>Remember me</span>
-            </label>
+            <mat-checkbox class="erp-checkbox text-app-soft">Remember me</mat-checkbox>
 
-            <a
-              href="#"
+            <button
+              mat-button
+              type="button"
               class="forgot-link text-sm font-medium text-(--color-primary)"
-              (click)="$event.preventDefault()"
             >
               Forgot password?
-            </a>
+            </button>
           </div>
 
           @if ((authError$ | async); as error) {
@@ -114,14 +133,14 @@ import { LoadingSpinnerComponent } from '../../../../shared/ui/loading-spinner/l
           }
 
           <button
+            mat-flat-button
+            color="primary"
             type="submit"
             [disabled]="form.invalid || (authLoading$ | async)"
-            class="btn-primary login-submit inline-flex w-full items-center justify-center rounded-2xl px-4 py-3.5 text-sm font-semibold shadow-lg disabled:cursor-not-allowed disabled:opacity-70"
+            class="erp-button-primary login-submit inline-flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-70"
           >
             @if (authLoading$ | async) {
-              <span class="inline-flex items-center gap-2">
-                <app-loading-spinner label="Signing in..." />
-              </span>
+              <app-loading-spinner label="Signing in..." />
             } @else {
               <span>Sign In</span>
             }
@@ -176,7 +195,7 @@ import { LoadingSpinnerComponent } from '../../../../shared/ui/loading-spinner/l
       border-color: color-mix(in srgb, var(--color-primary) 18%, var(--color-border));
     }
 
-    .login-input,
+    .login-field,
     .login-submit {
       transition:
         border-color 180ms ease,
@@ -187,28 +206,12 @@ import { LoadingSpinnerComponent } from '../../../../shared/ui/loading-spinner/l
         opacity 180ms ease;
     }
 
-    .login-input-shell {
-      transition:
-        border-color 180ms ease,
-        box-shadow 180ms ease,
-        background-color 180ms ease,
-        transform 180ms ease;
-    }
-
-    .login-input-shell:focus-within {
-      border-color: color-mix(in srgb, var(--color-primary) 45%, var(--color-border));
-      box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 10%, transparent);
+    .login-field:focus-within {
       transform: translateY(-1px);
-    }
-
-    .login-input:focus {
-      box-shadow: none;
     }
 
     .password-toggle,
     .forgot-link,
-    .remember-option,
-    .remember-checkbox,
     .auth-alert,
     .helper-alert {
       transition:
@@ -221,54 +224,11 @@ import { LoadingSpinnerComponent } from '../../../../shared/ui/loading-spinner/l
     }
 
     .password-toggle:hover {
-      color: var(--color-text-strong);
       transform: translateY(-1px);
     }
 
     .forgot-link:hover {
       color: var(--color-primary-strong);
-    }
-
-    .remember-option:hover {
-      color: var(--color-text-strong);
-    }
-
-    .remember-checkbox {
-      appearance: none;
-      position: relative;
-      box-shadow: inset 0 0 0 1px var(--color-border);
-    }
-
-    .remember-checkbox::after {
-      content: '';
-      position: absolute;
-      inset: 2px;
-      border-radius: 0.2rem;
-      background: var(--color-primary);
-      transform: scale(0.4);
-      opacity: 0;
-      transition:
-        transform 160ms ease,
-        opacity 160ms ease;
-    }
-
-    .remember-checkbox:hover {
-      border-color: color-mix(in srgb, var(--color-primary) 28%, var(--color-border));
-      box-shadow:
-        inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 28%, var(--color-border)),
-        0 0 0 4px color-mix(in srgb, var(--color-primary) 8%, transparent);
-    }
-
-    .remember-checkbox:checked::after {
-      transform: scale(1);
-      opacity: 1;
-    }
-
-    .remember-checkbox:focus-visible {
-      outline: none;
-      box-shadow:
-        inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 30%, var(--color-border)),
-        0 0 0 4px color-mix(in srgb, var(--color-primary) 10%, transparent);
     }
 
     .login-feedback,

@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 import { RouterLink } from '@angular/router';
 
 import { PageHeaderComponent } from '../../../../shared/ui/page-header/page-header.component';
@@ -7,7 +9,7 @@ import { SummaryCardComponent } from '../../../../shared/ui/summary-card/summary
 @Component({
   selector: 'app-dashboard-home-page',
   standalone: true,
-  imports: [PageHeaderComponent, RouterLink, SummaryCardComponent],
+  imports: [MatCardModule, MatChipsModule, PageHeaderComponent, RouterLink, SummaryCardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-6">
@@ -29,39 +31,39 @@ import { SummaryCardComponent } from '../../../../shared/ui/summary-card/summary
       </section>
 
       <section class="grid gap-6 xl:grid-cols-[1.4fr_0.9fr]">
-        <article class="panel p-6">
+        <mat-card class="panel p-6">
           <h3 class="text-app-strong text-xl font-semibold">Actividad reciente</h3>
           <div class="mt-5 grid gap-4">
             @for (item of recentActivity; track item.title) {
-              <div class="surface-soft rounded-2xl px-4 py-4">
+              <mat-card class="surface-soft rounded-2xl px-4 py-4">
                 <div class="flex items-start justify-between gap-4">
                   <div>
                     <p class="text-app-strong font-semibold">{{ item.title }}</p>
                     <p class="text-app-soft mt-1 text-sm">{{ item.description }}</p>
                   </div>
-                  <span class="theme-toggle rounded-full px-3 py-1 text-xs font-semibold shadow-none">
+                  <mat-chip class="theme-toggle text-xs font-semibold shadow-none">
                     {{ item.when }}
-                  </span>
+                  </mat-chip>
                 </div>
-              </div>
+              </mat-card>
             }
           </div>
-        </article>
+        </mat-card>
 
-        <article class="panel p-6">
+        <mat-card class="panel p-6">
           <h3 class="text-app-strong text-xl font-semibold">Accesos rapidos</h3>
           <div class="mt-5 grid gap-3">
             @for (item of shortcuts; track item.title) {
-              <a
+              <mat-card
                 [routerLink]="item.href"
                 class="surface-soft rounded-2xl px-4 py-4 text-sm transition hover:-translate-y-0.5"
               >
                 <p class="text-app-strong font-semibold">{{ item.title }}</p>
                 <p class="text-app-soft mt-1">{{ item.description }}</p>
-              </a>
+              </mat-card>
             }
           </div>
-        </article>
+        </mat-card>
       </section>
     </div>
   `

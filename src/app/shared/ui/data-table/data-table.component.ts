@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { MatTableModule } from '@angular/material/table';
 
 export interface DataTableColumn {
   key: string;
@@ -10,35 +12,29 @@ export type DataTableRow = Record<string, string | number>;
 @Component({
   selector: 'app-data-table',
   standalone: true,
+  imports: [MatCardModule, MatTableModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="panel overflow-hidden">
+    <mat-card class="panel overflow-hidden">
       <div class="overflow-x-auto">
-        <table class="table-shell min-w-full divide-y">
-          <thead class="table-head">
-            <tr>
-              @for (column of columns(); track column.key) {
-                <th class="text-app-soft px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.2em]">
-                  {{ column.label }}
-                </th>
-              }
-            </tr>
-          </thead>
-          <tbody class="table-shell divide-y">
-            @for (row of rows(); track $index) {
-              <tr class="table-row">
-                @for (column of columns(); track column.key) {
-                  <td class="text-app px-4 py-4 text-sm">{{ row[column.key] }}</td>
-                }
-              </tr>
-            }
-          </tbody>
+        <table mat-table [dataSource]="rows()" class="erp-table min-w-full">
+          @for (column of columns(); track column.key) {
+            <ng-container [matColumnDef]="column.key">
+              <th mat-header-cell *matHeaderCellDef>{{ column.label }}</th>
+              <td mat-cell *matCellDef="let row" class="text-app text-sm">{{ row[column.key] }}</td>
+            </ng-container>
+          }
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns()"></tr>
         </table>
       </div>
-    </div>
+    </mat-card>
   `
 })
 export class DataTableComponent {
   readonly columns = input.required<DataTableColumn[]>();
   readonly rows = input.required<DataTableRow[]>();
+
+  protected readonly displayedColumns = () => this.columns().map((column) => column.key);
 }

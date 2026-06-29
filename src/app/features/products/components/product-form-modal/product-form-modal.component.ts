@@ -1,38 +1,47 @@
-import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs/operators';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
-import { Product, ProductFormValue } from '../../models/product.model';
+import { ProductFormValue, ProductModalState, ProductStatus } from '../../models/product.model';
 import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-product-form-modal',
   standalone: true,
-  imports: [AsyncPipe, ReactiveFormsModule],
+  imports: [
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatSelectModule,
+    ReactiveFormsModule
+  ],
   templateUrl: './product-form-modal.component.html',
   styleUrl: './product-form-modal.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductFormModalComponent {
   private readonly fb = inject(FormBuilder);
-  private readonly destroyRef = inject(DestroyRef);
   private readonly productService = inject(ProductService);
+  private readonly dialogRef = inject(MatDialogRef<ProductFormModalComponent>);
+  private readonly modalState = inject<ProductModalState>(MAT_DIALOG_DATA);
 
-  protected readonly modalState$ = this.productService.modalState$;
-  protected readonly modalTitle$ = this.modalState$.pipe(
-    map((state) => (state.mode === 'edit' ? 'Editar producto' : 'Alta Producto'))
+  protected readonly modalTitle = computed(() =>
+    this.modalState.mode === 'edit' ? 'Editar producto' : 'Alta Producto'
   );
-  protected readonly modalDescription$ = this.modalState$.pipe(
-    map((state) =>
-      state.mode === 'edit'
-        ? 'Revisa y ajusta el producto mock seleccionado antes de la futura integracion con la API.'
-        : 'Prepara un nuevo producto mock con una estructura lista para conectar luego con la API.'
-    )
+  protected readonly modalDescription = computed(() =>
+    this.modalState.mode === 'edit'
+      ? 'Revisa y ajusta el producto mock seleccionado antes de la futura integracion con la API.'
+      : 'Prepara un nuevo producto mock con una estructura lista para conectar luego con la API.'
   );
-  protected readonly submitLabel$ = this.modalState$.pipe(
-    map((state) => (state.mode === 'edit' ? 'Guardar cambios' : 'Confirmar alta'))
+  protected readonly submitLabel = computed(() =>
+    this.modalState.mode === 'edit' ? 'Guardar cambios' : 'Confirmar alta'
   );
 
   protected readonly form = this.fb.nonNullable.group({
@@ -41,17 +50,16 @@ export class ProductFormModalComponent {
     category: ['', [Validators.required, Validators.maxLength(80)]],
     stock: [0, [Validators.required, Validators.min(0)]],
     price: [0, [Validators.required, Validators.min(0)]],
-    status: ['active' as Product['status'], [Validators.required]],
+    status: ['active' as ProductStatus, [Validators.required]],
     description: ['', [Validators.maxLength(300)]]
   });
 
   constructor() {
-    this.modalState$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((state) => this.syncForm(state.product));
+    this.syncForm();
   }
 
   protected closeModal(): void {
+    this.dialogRef.close();
     this.productService.closeModal();
   }
 
@@ -65,16 +73,16 @@ export class ProductFormModalComponent {
     this.closeModal();
   }
 
-  private syncForm(product: Product | null): void {
-    const formValue: ProductFormValue = product
+  private syncForm(): void {
+    const formValue: ProductFormValue = this.modalState.product
       ? {
-          sku: product.sku,
-          name: product.name,
-          category: product.category,
-          stock: product.stock,
-          price: product.price,
-          status: product.status,
-          description: product.description
+          sku: this.modalState.product.sku,
+          name: this.modalState.product.name,
+          category: this.modalState.product.category,
+          stock: this.modalState.product.stock,
+          price: this.modalState.product.price,
+          status: this.modalState.product.status,
+          description: this.modalState.product.description
         }
       : {
           sku: '',

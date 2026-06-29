@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
+import { ProductFormModalComponent } from '../components/product-form-modal/product-form-modal.component';
 import { Product, ProductModalState } from '../models/product.model';
 
 const MOCK_PRODUCTS: Product[] = [
@@ -45,6 +47,7 @@ const initialModalState: ProductModalState = {
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
+  private readonly dialog = inject(MatDialog);
   private readonly modalStateSubject = new BehaviorSubject<ProductModalState>(initialModalState);
 
   readonly modalState$ = this.modalStateSubject.asObservable();
@@ -54,22 +57,29 @@ export class ProductService {
   }
 
   openCreateModal(): void {
-    this.modalStateSubject.next({
+    const state: ProductModalState = {
       isOpen: true,
       mode: 'create',
       product: null
-    });
+    };
+
+    this.modalStateSubject.next(state);
+    this.openDialog(state);
   }
 
   openEditModal(product: Product): void {
-    this.modalStateSubject.next({
+    const state: ProductModalState = {
       isOpen: true,
       mode: 'edit',
       product
-    });
+    };
+
+    this.modalStateSubject.next(state);
+    this.openDialog(state);
   }
 
   closeModal(): void {
+    this.dialog.closeAll();
     this.modalStateSubject.next(initialModalState);
   }
 
@@ -81,5 +91,23 @@ export class ProductService {
   // TODO: Reemplazar este placeholder por un PUT/PATCH real y despachar acciones de exito o error.
   updateProduct(): Observable<void> {
     return of(void 0).pipe(delay(250));
+  }
+
+  private openDialog(state: ProductModalState): void {
+    this.dialog.closeAll();
+
+    const dialogRef = this.dialog.open(ProductFormModalComponent, {
+      data: state,
+      width: 'min(100vw - 2rem, 48rem)',
+      maxWidth: '48rem',
+      maxHeight: 'calc(100dvh - 2rem)',
+      autoFocus: false,
+      panelClass: 'erp-product-dialog',
+      backdropClass: 'erp-dialog-backdrop'
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.modalStateSubject.next(initialModalState);
+    });
   }
 }

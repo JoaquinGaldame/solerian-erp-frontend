@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-page-header',
   standalone: true,
-  imports: [RouterLink],
+  imports: [MatButtonModule, MatIconModule, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -18,8 +20,11 @@ import { RouterLink } from '@angular/router';
       @if (actionLabel() && actionRoute()) {
         <a
           [routerLink]="actionRoute()"
-          class="btn-primary inline-flex items-center justify-center rounded-2xl px-4 py-3 text-sm font-semibold shadow-lg transition hover:-translate-y-0.5"
+          mat-flat-button
+          color="primary"
+          class="erp-button-primary inline-flex items-center gap-2 px-4 py-3 text-sm font-semibold transition hover:-translate-y-0.5"
         >
+          <mat-icon fontSet="material-symbols-outlined">add</mat-icon>
           {{ actionLabel() }}
         </a>
       }
